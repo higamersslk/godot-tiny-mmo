@@ -85,9 +85,9 @@ func add_item(item_id: int, item_data: Dictionary) -> void:
 	)
 
 	var quantity_label: Label = Label.new()
-	quantity_label.size = Vector2.ZERO
 	quantity_label.text = str(item_data.get("a", 1))
-	quantity_label.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_RIGHT)
+	quantity_label.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_LEFT)
+
 	new_button.add_child(quantity_label)
 
 	new_button.icon = item.item_icon

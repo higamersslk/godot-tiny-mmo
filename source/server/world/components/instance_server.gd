@@ -146,19 +146,16 @@ func instantiate_player(peer_id: int) -> Player:
 				player_stats[stat_name] = stats_from_attributes[stat_name]
 		
 		player_resource.stats = player_stats
-		WorldServer.curr.data_push.rpc_id(peer_id, &"stats.get", player_stats)
 
 		for stat_name: StringName in player_stats:
 			var value: float = player_stats[stat_name]
-			print(stat_name, " : ", value)
 			new_player.stats_component.set_stat(stat_name, value)
+		# Set health to max health (heal player to full HP)
 		new_player.stats_component.set_stat(
 			Stat.HEALTH,
 			new_player.stats_component.get_stat(Stat.HEALTH_MAX)
 		)
-		print(player_resource.stats)
-		print_debug("-\n", new_player.stats_component.stats.values)
-
+		WorldServer.curr.data_push.rpc_id(peer_id, &"stats.get", new_player.stats_component.stats.values)
 	new_player.ready.connect(setup_new_player,CONNECT_ONE_SHOT)
 	return new_player
 

@@ -277,13 +277,12 @@ script = ExtResource("14_xkgtg")
 layout_mode = 2
 
 [node name="RichTextLabel" type="RichTextLabel" parent="MarginContainer/VBoxContainer/MainContainer/CharacterPanel/VBoxContainer2/Stats/VBoxContainer" unique_id=2142776793]
+custom_minimum_size = Vector2(249, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 bbcode_enabled = true
-text = "[color=#08b502]HP 100[/color]
-Damage 20
-Magic 0"
+text = "[color=#08b502]HP 100[/color]"
 scroll_active = false
 
 [node name="DetailsButton" type="Button" parent="MarginContainer/VBoxContainer/MainContainer/CharacterPanel/VBoxContainer2/Stats/VBoxContainer" unique_id=610731061]

@@ -57,6 +57,6 @@ class Stats extends RefCounted:
 		if typeof(value) != TYPE_FLOAT:
 			return false
 
-		stat_changed.emit(property, value)
 		values[property] = value
+		stat_changed.emit(property, value)
 		return true

@@ -1,61 +1,72 @@
 extends PanelContainer
 
 
-var stats: Dictionary
+var observed_stats: StatsComponent.Stats
 
 @onready var stats_display: RichTextLabel = $VBoxContainer/RichTextLabel
 
 
 func _ready() -> void:
-	Client.subscribe(&"stats.update", fill_stats)
-	# If already stored.
-	fill_stats(ClientState.stats.data)
+	if ClientState.local_player:
+		watch_stats(ClientState.local_player.stats_component.stats)
 
 
-func fill_stats(data: Dictionary) -> void:
-	if data.is_empty():
+func watch_stats(stats: StatsComponent.Stats) -> void:
+	if observed_stats and observed_stats.stat_changed.is_connected(_on_stats_changed):
+		observed_stats.stat_changed.disconnect(_on_stats_changed)
+
+	observed_stats = stats
+	if observed_stats:
+		observed_stats.stat_changed.connect(_on_stats_changed)
+
+	redraw()
+
+
+func _on_stats_changed(_stat_name: StringName, _value: float) -> void:
+	redraw()
+
+
+func redraw() -> void:
+	if not observed_stats:
 		return
-	ClientState.stats.data.merge(data, true)
-	
+
+	stats_display.clear()
 	stats_display.text = ""
-	
-	stats = ClientState.stats.data.duplicate()
-	
+
 	stats_display.push_table(2)
 	stats_display.set_table_column_expand(0, true)
-	stats_display.set_table_column_expand(1, true)
-	
-	
+	stats_display.set_table_column_expand(1, true, 10)
+
 	add_stat_text("HP %d/%d", Color("#3de600"),
-		[stats.get(Stat.HEALTH, 0), stats.get(Stat.HEALTH, 0)]
+		[observed_stats.values.get(Stat.HEALTH, 0), observed_stats.values.get(Stat.HEALTH_MAX, 0)]
 	)
 	
 	add_stat_text("Mana %d", Color("#009dc4"),
-		[stats.get(Stat.MANA, 0)]
+		[observed_stats.values.get(Stat.MANA_MAX, 0)]
 	)
 	
 	add_stat_text("Attack %d", Color("#fc7f03"),
-		[stats.get(Stat.AD, 0)]
+		[observed_stats.values.get(Stat.AD, 0)]
 	)
 	
 	add_stat_text("Armor %d", Color("#fc7f03"),
-		[stats.get(Stat.ARMOR, 0)]
+		[observed_stats.values.get(Stat.ARMOR, 0)]
 	)
 	
 	add_stat_text("Magic %d", Color("#6f03fc"),
-		[stats.get(Stat.AP, 0)]
+		[observed_stats.values.get(Stat.AP, 0)]
 	)
 	
 	add_stat_text("MagicRes %d", Color("#6f03fc"),
-		[stats.get(Stat.MR, 0)]
+		[observed_stats.values.get(Stat.MR, 0)]
 	)
 
-	add_stat_text("Speed %d", Color("#dbd802"),
-		[stats.get(Stat.MOVE_SPEED, 0)]
+	add_stat_text("Move Speed %d", Color("#dbd802"),
+		[observed_stats.values.get(Stat.MOVE_SPEED, 0)]
 	)
 	
 	add_stat_text("Tenacity %d", Color("#619902"),
-		[stats.get(&"tenacity", 0)]
+		[observed_stats.values.get(&"tenacity", 0)]
 	)
 	
 	stats_display.pop()
