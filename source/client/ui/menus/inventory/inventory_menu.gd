@@ -102,6 +102,7 @@ func add_item(item_id: int, item_data: Dictionary) -> void:
 	inventory_slot.quantity = item_data.get("a", 1)
 	inventory_slot.item_data = item_data
 	inventory_slot.item = item
+	inventory_slot.quantity_label = quantity_label
 
 	inventory[item_id] = inventory_slot
 
@@ -163,12 +164,15 @@ class InventorySlot:
 	var item_id: int
 	var item_data: Dictionary
 	var item: Item
+	var quantity_label: Label
 
 
 	func update_slot(data: Dictionary) -> void:
 		quantity += data.get("add", 0)
 		item_data.merge(data, true)
-		button.text = str(quantity)
+		if quantity_label:
+			quantity_label.text = "x%d" % quantity
+
 
 var connect_hotkey_once: bool = false
 func _on_hotkey_button_pressed() -> void:

@@ -16,6 +16,9 @@ func can_equip(player: Player) -> bool:
 
 
 func equip(character: Character) -> void:
+	if not character.multiplayer.is_server():
+		# Client side logic - visual
+		return
 	for modifier: StatModifier in base_modifiers:
 		character.stats_component.modify_stat(
 			modifier.stat_name, modifier.value
@@ -23,6 +26,9 @@ func equip(character: Character) -> void:
 
 
 func unequip(character: Character) -> void:
+	if not character.multiplayer.is_server():
+		# Client side logic - visual
+		return
 	for modifier: StatModifier in base_modifiers:
 		character.stats_component.modify_stat(
 			modifier.stat_name, modifier.value * -1

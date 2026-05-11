@@ -141,9 +141,9 @@ func instantiate_player(peer_id: int) -> Player:
 		# Add base player attributes to general base stats.
 		for stat_name: StringName in stats_from_attributes:
 			if player_stats.has(stat_name):
-				player_stats[stat_name] = stats_from_attributes[stat_name]
-			else:
 				player_stats[stat_name] += stats_from_attributes[stat_name]
+			else:
+				player_stats[stat_name] = stats_from_attributes[stat_name]
 		
 		player_resource.stats = player_stats
 		WorldServer.curr.data_push.rpc_id(peer_id, &"stats.get", player_stats)
@@ -156,7 +156,8 @@ func instantiate_player(peer_id: int) -> Player:
 			Stat.HEALTH,
 			new_player.stats_component.get_stat(Stat.HEALTH_MAX)
 		)
-
+		print(player_resource.stats)
+		print_debug("-\n", new_player.stats_component.stats.values)
 
 	new_player.ready.connect(setup_new_player,CONNECT_ONE_SHOT)
 	return new_player
