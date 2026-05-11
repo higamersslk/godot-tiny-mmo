@@ -2,5 +2,13 @@ class_name StatModifier
 extends Resource
 
 
-@export var stat_id: Stat.Id = Stat.Id.HEALTH
+@export_enum(
+	Stat.HEALTH_MAX,
+	Stat.MANA_MAX,
+	Stat.ARMOR,
+	Stat.AD,
+	Stat.MOVE_SPEED
+)
+var stat_name: String = Stat.HEALTH_MAX
+
 @export var value: float = 0.0

@@ -2,66 +2,101 @@ class_name EquipmentComponent
 extends Node
 
 
-@export var _asc: AbilitySystemComponent
+signal equipment_changed(
+	slot: StringName,
+	item_id: int
+)
+
+
 @export var character: Character
 
-var _slots: Dictionary[StringName, GearItem]
-var _mounted: Dictionary[StringName, Weapon]
+@export var synchronizer: StateSynchronizer
 
-var mainhand_id: int:
-	set = _set_mainhand_id
-var offhand_id: int:
-	set = _set_offhand_id
-var mount_id: int:
-	set = _set_mount_id
+
+var slots: EquipmentSlots = EquipmentSlots.new()
+
+var equipped_items: Dictionary[StringName, GearItem]
+
+#Note to myself because a weapon may spawn main weapon, offhand, trail vfx, aura mount etc.
+# This format may be more scalable
+#Later mounted_nodes: Dictionary[StringName, Array[Node]]
+var mounted_nodes: Dictionary[StringName, Node]
 
 
 func _ready() -> void:
-	pass
-
-# Good / Bad Design ?
-func _set_mainhand_id(id: int) -> void:
-	mainhand_id = id
-	load_and_equip_weapon(id)
-func _set_offhand_id(id: int) -> void:
-	offhand_id = id
-	load_and_equip_weapon(id)
-func _set_mount_id(id: int) -> void:
-	mount_id = id
-	load_and_equip_weapon(id)
+	slots.slot_changed.connect(_on_slot_changed)
 
 
-func load_and_equip_weapon(weapon_id: int) -> bool:
-	var weapon: WeaponItem = ContentRegistryHub.load_by_id(&"items", weapon_id) as WeaponItem
-	if not weapon:
-		return false
-	equip(weapon.slot.key, weapon)
-	return true
-
-
-func equip(slot: StringName, item: Item) -> bool:
-	if _slots.has(slot):
-		unequip(slot)
-	_slots[slot] = item
-	item.on_equip(character)
-	return true
+func equip_item(item_id: int) -> bool:
+	var item: GearItem = ContentRegistryHub.load_by_id(&"items", item_id) as GearItem
+	if item and item.can_equip(character):
+		synchronizer.set_by_path(slot_path(item.slot.key), item_id)
+		return true
+	return false
 
 
 func unequip(slot: StringName) -> void:
-	var item: Item = _slots.get(slot, null)
-	if item:
-		item.on_unequip(character)
-		_slots.erase(slot)
-	var node: Node = _mounted.get(slot, null)
-	if node:
-		node.queue_free()
-		_mounted.erase(slot)
+	synchronizer.set_by_path(slot_path(slot), 0)
 
 
 func can_use(slot: StringName, index: int) -> bool:
-	return _mounted.has(slot) and _mounted[slot].can_use_weapon(index)
+	var mounted: Weapon = mounted_nodes.get(slot, null)
+
+	if mounted and mounted.has_method("can_use_weapon"):
+		return mounted.can_use_weapon(index)
+	return false
 
 
 func process_input(local_player: LocalPlayer) -> void:
-	if _mounted.has(&"weapon"):
-		_mounted[&"weapon"].process_input(local_player)
+	var mounted: Weapon = mounted_nodes.get(&"weapon", null)
+
+	if mounted and mounted.has_method("process_input"):
+		mounted.process_input(local_player)
+
+
+func _on_slot_changed(slot: StringName, item_id: int) -> void:
+	_clear_slot(slot)
+
+	if item_id == 0:
+		equipment_changed.emit(slot, 0)
+		return
+	var item: Item = ContentRegistryHub.load_by_id(&"items", item_id)
+	if not item:
+		return
+	
+	equipped_items[slot] = item
+	item.equip(character)
+	equipment_changed.emit(slot,  item_id)
+
+
+func _clear_slot(slot: StringName) -> void:
+	var item: Item = equipped_items.get(slot, null)
+	
+	if item:
+		item.unequip(character)
+	equipped_items.erase(slot)
+
+
+static func slot_path(slot: StringName) -> String:
+	return "EquipmentComponent:slots:%s" % slot
+
+
+class EquipmentSlots extends RefCounted:
+	signal slot_changed(slot: StringName, item_id: int)
+
+	var values: Dictionary[StringName, int]
+
+
+	func _get(property: StringName) -> Variant:
+		return values.get(property, 0)
+
+
+	func _set(property: StringName, value: Variant) -> bool:
+		if typeof(value) != TYPE_INT:
+			return false
+
+		values[property] = value
+
+		slot_changed.emit(property, value)
+
+		return true

@@ -29,7 +29,12 @@ static func _static_init() -> void:
 	register_field(":zone_flags", Wire.Type.U16)
 	
 	register_field("EquipmentComponent:mainhand_id", Wire.Type.U16)
-	# Stat fields are registered at run-time.
+
+	register_field("StatsComponent:stats:%s" % Stat.HEALTH,  Wire.Type.F32)
+	register_field("StatsComponent:stats:%s" % Stat.HEALTH_MAX,  Wire.Type.F32)
+
+	register_field("StatsComponent:stats:%s" % Stat.MANA,  Wire.Type.F32)
+	register_field("StatsComponent:stats:%s" % Stat.MANA_MAX,  Wire.Type.F32)
 
 
 static func reset() -> void:
@@ -62,7 +67,6 @@ static func register_field(path: String, wire_type: Wire.Type = Wire.Type.VARIAN
 
 static func ensure_id(path: String) -> int:
 	var existing: int = _path_to_id.get(path, 0)
-	#print_debug(path, existing)
 	if existing != 0:
 		return existing
 	return register_field(path, _id_to_type.get(existing, Wire.Type.VARIANT))

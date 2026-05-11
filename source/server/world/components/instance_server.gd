@@ -123,7 +123,7 @@ func spawn_player(peer_id: int) -> void:
 
 func instantiate_player(peer_id: int) -> Player:
 	var player_resource: PlayerResource = world_server.connected_players[peer_id]
-	
+
 	var new_player: Player = PLAYER.instantiate() as Player
 	new_player.name = str(peer_id)
 	new_player.player_resource = player_resource
@@ -132,14 +132,11 @@ func instantiate_player(peer_id: int) -> Player:
 		var syn: StateSynchronizer = new_player.state_synchronizer
 		syn.set_by_path(^":skin_id", new_player.player_resource.skin_id)
 		syn.set_by_path(^":display_name", new_player.player_resource.display_name)
-		
 
-		var asc: AbilitySystemComponent = new_player.ability_system_component
-		
 		var player_stats: Dictionary[StringName, float] = player_resource.BASE_STATS
-		const AttributesMap = preload("res://source/common/gameplay/combat/attributes/attributes_map.gd")
+
 		var stats_from_attributes: Dictionary[StringName, float]
-		stats_from_attributes.assign(AttributesMap.attr_to_stats(player_resource.attributes))
+		stats_from_attributes.assign(AttributeMap.attr_to_stats(player_resource.attributes))
 		
 		# Add base player attributes to general base stats.
 		for stat_name: StringName in stats_from_attributes:
@@ -150,11 +147,16 @@ func instantiate_player(peer_id: int) -> Player:
 		
 		player_resource.stats = player_stats
 		WorldServer.curr.data_push.rpc_id(peer_id, &"stats.get", player_stats)
-		
+
 		for stat_name: StringName in player_stats:
 			var value: float = player_stats[stat_name]
 			print(stat_name, " : ", value)
-			asc.set_attribute_value(stat_name, value)
+			new_player.stats_component.set_stat(stat_name, value)
+		new_player.stats_component.set_stat(
+			Stat.HEALTH,
+			new_player.stats_component.get_stat(Stat.HEALTH_MAX)
+		)
+
 
 	new_player.ready.connect(setup_new_player,CONNECT_ONE_SHOT)
 	return new_player

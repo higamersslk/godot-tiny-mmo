@@ -21,7 +21,7 @@ func _ready() -> void:
 		vosn.screen_exited.connect(queue_free)
 		add_child(vosn)
 	rotate(direction.angle())
-	
+
 	# One timer by bullet is bad practice.
 	# TODO MOVE IT TO A MANAGER
 	var timer: Timer = Timer.new()
@@ -36,25 +36,14 @@ func _physics_process(delta: float) -> void:
 
 
 func _on_body_entered(body: Node2D) -> void:
-	if body == source or not body.has_node(^"AbilitySystemComponent"):
+	if body == source or not body.has_node(^"StatsComponent"):
 		return
-	
+
 	if body is Player and not body.is_pvp():
 		return
-	
-	var asc: AbilitySystemComponent = body.ability_system_component
-	asc.apply_damage(10)
 
-	#var burn := BurnDotEffect.new()
-	#burn.name_id = &"RedBuffBurn"
-	#burn.duration = 3.0
-	#burn.period = 0.5
-	#asc.add_effect(burn, null)
-	#asc.set_attribute_value(&"health")
-	#asc.apply_spec_server(
-		#effect,
-		#source.get_node(^"AbilitySystemComponent")
-	#)
+	body.stats_component.modify_stat(&"health", -10)
+
 	if not piercing or pierce_left <= 0:
 		queue_free()
 	pierce_left -= 1

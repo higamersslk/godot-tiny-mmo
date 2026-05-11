@@ -1,11 +1,11 @@
-[gd_scene load_steps=39 format=3 uid="uid://6bcg7fwcl6mi"]
+[gd_scene format=3 uid="uid://6bcg7fwcl6mi"]
 
 [ext_resource type="Script" uid="uid://bu6yn6ww7d7c8" path="res://source/common/gameplay/characters/character.gd" id="1_uqmoo"]
 [ext_resource type="AnimationLibrary" uid="uid://n1w3r0jaxp0q" path="res://source/common/gameplay/characters/animations/locomotion.tres" id="2_k3wew"]
 [ext_resource type="SpriteFrames" uid="uid://bqcsne8jhbmi8" path="res://source/common/gameplay/characters/sprite_frames/knight.tres" id="2_pypn5"]
 [ext_resource type="AnimationLibrary" uid="uid://rbv6cl1ldcc7" path="res://source/common/gameplay/items/weapons/sword/sword_animations.tres" id="3_8hp20"]
 [ext_resource type="Script" uid="uid://d1a30n4ktgm71" path="res://source/common/network/sync/state_synchronizer.gd" id="5_eyotc"]
-[ext_resource type="Script" uid="uid://gl2cwrrfvlkh" path="res://source/common/gameplay/combat/components/ability_system_component.gd" id="6_fg3fs"]
+[ext_resource type="Script" uid="uid://gl2cwrrfvlkh" path="res://source/common/gameplay/combat/components/stats_component.gd" id="6_fg3fs"]
 [ext_resource type="Script" uid="uid://bu62r4mj8ohfc" path="res://source/common/gameplay/combat/components/equipment_component.gd" id="8_wql3f"]
 
 [sub_resource type="Animation" id="Animation_pypn5"]
@@ -154,6 +154,7 @@ transitions = ["Start", "weapon_idle", SubResource("AnimationNodeStateMachineTra
 
 [sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_65mbs"]
 graph_offset = Vector2(722.962, 825.874)
+nodes/output/position = Vector2(2280, 620)
 nodes/Blend2/node = SubResource("AnimationNodeBlend2_8hp20")
 nodes/Blend2/position = Vector2(1580, 680)
 "nodes/Blend2 2/node" = SubResource("AnimationNodeBlend2_k3wew")
@@ -178,8 +179,7 @@ nodes/RightOneShot/node = SubResource("AnimationNodeOneShot_2wxx6")
 nodes/RightOneShot/position = Vector2(1400, 860)
 nodes/WeaponSM/node = SubResource("AnimationNodeStateMachine_gvcre")
 nodes/WeaponSM/position = Vector2(750.49, 681.791)
-nodes/output/position = Vector2(2280, 620)
-node_connections = [&"Blend2", 0, &"LocomotionSM", &"Blend2", 1, &"WeaponSM", &"InteruptShot", 0, &"Blend2", &"InteruptShot", 1, &"InteruptAnimation", &"LeftOneShot", 0, &"LeftIdle", &"LeftOneShot", 1, &"LeftAction", &"RightOneShot", 0, &"RightIdle", &"RightOneShot", 1, &"RightAction", &"output", 0, &"InteruptShot"]
+node_connections = [&"output", 0, &"InteruptShot", &"Blend2", 0, &"LocomotionSM", &"Blend2", 1, &"WeaponSM", &"InteruptShot", 0, &"Blend2", &"InteruptShot", 1, &"InteruptAnimation", &"LeftOneShot", 0, &"LeftIdle", &"LeftOneShot", 1, &"LeftAction", &"RightOneShot", 0, &"RightIdle", &"RightOneShot", 1, &"RightAction"]
 
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_8hp20"]
 advance_mode = 2
@@ -204,20 +204,18 @@ bg_color = Color(0.6, 0.6, 0.6, 0.521569)
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_eyotc"]
 bg_color = Color(0.694118, 0.101961, 0.14902, 0.705882)
 
-[node name="Character" type="CharacterBody2D"]
+[node name="Character" type="CharacterBody2D" unique_id=1802487765]
 y_sort_enabled = true
 texture_filter = 1
 collision_mask = 6
 script = ExtResource("1_uqmoo")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-libraries = {
-&"": SubResource("AnimationLibrary_wq2ob"),
-&"locomotion": ExtResource("2_k3wew"),
-&"weapon": ExtResource("3_8hp20")
-}
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1369636222]
+libraries/ = SubResource("AnimationLibrary_wq2ob")
+libraries/locomotion = ExtResource("2_k3wew")
+libraries/weapon = ExtResource("3_8hp20")
 
-[node name="AnimationTree" type="AnimationTree" parent="."]
+[node name="AnimationTree" type="AnimationTree" parent="." unique_id=244726595]
 tree_root = SubResource("AnimationNodeStateMachine_vih0n")
 anim_player = NodePath("../AnimationPlayer")
 parameters/OnFoot/Blend2/blend_amount = 1.0
@@ -232,45 +230,45 @@ parameters/OnFoot/RightOneShot/active = false
 parameters/OnFoot/RightOneShot/internal_active = false
 parameters/OnFoot/RightOneShot/request = 0
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1675562039]
 sprite_frames = ExtResource("2_pypn5")
 animation = &"idle"
 frame_progress = 0.125846
 speed_scale = 1.5
 offset = Vector2(0, -30)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1897743854]
 visible = false
 position = Vector2(0, -2)
 shape = SubResource("RectangleShape2D_3w1m3")
 
-[node name="HandOffset" type="Node2D" parent="."]
+[node name="HandOffset" type="Node2D" parent="." unique_id=2126751317]
 z_index = 1
 position = Vector2(0, -10)
 
-[node name="HandPivot" type="Node2D" parent="HandOffset"]
+[node name="HandPivot" type="Node2D" parent="HandOffset" unique_id=1721209134]
 
-[node name="RightHandSpot" type="Node2D" parent="HandOffset/HandPivot"]
+[node name="RightHandSpot" type="Node2D" parent="HandOffset/HandPivot" unique_id=1513143708]
 position = Vector2(15, 0)
 
-[node name="LeftHandSpot" type="Node2D" parent="HandOffset/HandPivot"]
+[node name="LeftHandSpot" type="Node2D" parent="HandOffset/HandPivot" unique_id=228988918]
 position = Vector2(-15, 0)
 scale = Vector2(-1, 1)
 metadata/_edit_group_ = true
 
-[node name="RightRig" type="Node2D" parent="HandOffset/HandPivot"]
+[node name="RightRig" type="Node2D" parent="HandOffset/HandPivot" unique_id=754037544]
 
-[node name="LeftRig" type="Node2D" parent="HandOffset/HandPivot"]
+[node name="LeftRig" type="Node2D" parent="HandOffset/HandPivot" unique_id=1047543413]
 
-[node name="HurtBox" type="Area2D" parent="."]
+[node name="HurtBox" type="Area2D" parent="." unique_id=1315204681]
 visible = false
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="HurtBox"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HurtBox" unique_id=257403909]
 position = Vector2(0, -16)
 shape = SubResource("RectangleShape2D_eyotc")
 debug_color = Color(0.846048, 0.237298, 0.730831, 0.42)
 
-[node name="ProgressBar" type="ProgressBar" parent="."]
+[node name="ProgressBar" type="ProgressBar" parent="." unique_id=1823295515]
 offset_left = -16.0
 offset_top = -38.0
 offset_right = 16.0
@@ -282,17 +280,16 @@ value = 50.0
 allow_greater = true
 show_percentage = false
 
-[node name="StateSynchronizer" type="Node" parent="." node_paths=PackedStringArray("root_node")]
+[node name="StateSynchronizer" type="Node" parent="." unique_id=550344404 node_paths=PackedStringArray("root_node")]
 script = ExtResource("5_eyotc")
 root_node = NodePath("..")
 metadata/_custom_type_script = "uid://d1a30n4ktgm71"
 
-[node name="AbilitySystemComponent" type="Node" parent="." node_paths=PackedStringArray("synchronizer")]
+[node name="StatsComponent" type="Node" parent="." unique_id=428606123 node_paths=PackedStringArray("synchronizer")]
 script = ExtResource("6_fg3fs")
 synchronizer = NodePath("../StateSynchronizer")
 metadata/_custom_type_script = "uid://gl2cwrrfvlkh"
 
-[node name="EquipmentComponent" type="Node" parent="." node_paths=PackedStringArray("_asc", "character")]
+[node name="EquipmentComponent" type="Node" parent="." unique_id=1695674137 node_paths=PackedStringArray("character")]
 script = ExtResource("8_wql3f")
-_asc = NodePath("../AbilitySystemComponent")
 character = NodePath("..")

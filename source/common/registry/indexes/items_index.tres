@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="ContentIndex" load_steps=2 format=3 uid="uid://dbh5capirnmfs"]
+[gd_resource type="Resource" script_class="ContentIndex" format=3 uid="uid://dbh5capirnmfs"]
 
 [ext_resource type="Script" uid="uid://0wmtcxri41vp" path="res://source/common/registry/content_index.gd" id="1_gemjq"]
 
@@ -33,5 +33,3 @@ entries = Array[Dictionary]([{
 &"path": "res://source/common/gameplay/items/weapons/bow/wooden_bow.item.tres",
 &"slug": &"wooden_bow.item"
 }])
-scan_path = ""
-filters = PackedStringArray()

@@ -15,11 +15,15 @@ func can_equip(player: Player) -> bool:
 	return false
 
 
-func on_equip(character: Character) -> void:
+func equip(character: Character) -> void:
 	for modifier: StatModifier in base_modifiers:
-		character.ability_system_component.add_modifier(modifier)
+		character.stats_component.modify_stat(
+			modifier.stat_name, modifier.value
+		)
 
 
-func on_unequip(character: Character) -> void:
+func unequip(character: Character) -> void:
 	for modifier: StatModifier in base_modifiers:
-		character.ability_system_component.remove_modifier_by_id(modifier.runtime_id)
+		character.stats_component.modify_stat(
+			modifier.stat_name, modifier.value * -1
+		)

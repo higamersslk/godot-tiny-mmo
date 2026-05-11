@@ -23,8 +23,8 @@ func _on_action_performed(payload: Dictionary) -> void:
 		return
 	
 	# To fix
-	if player.equipment_component._mounted.has(&"weapon"):
-		player.equipment_component._mounted[&"weapon"].perform_action(payload["i"], payload["d"])
+	if player.equipment_component.mounted_nodes.has(&"weapon"):
+		player.equipment_component.mounted_nodes[&"weapon"].perform_action(payload["i"], payload["d"])
 
 
 func _ready() -> void:

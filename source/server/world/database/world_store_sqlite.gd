@@ -85,6 +85,8 @@ func create_player_character(account_name: String, character_data: Dictionary) -
 		int(character_data.get("skin", 1))
 	)
 
+	# Hardcode default items
+	player.inventory = {1: {}, 2: {}, 3: {}, 4: {}, 5: {}}
 	# Leave defaults to PlayerResource where possible.
 	save_player(player)
 	return next_id
@@ -139,6 +141,8 @@ func _row_to_player(row: Dictionary) -> PlayerResource:
 
 	player.attributes.assign(JSON.parse_string(str(row.get("attributes_json", "{}"))) as Dictionary)
 	player.inventory.assign(JSON.parse_string(str(row.get("inventory_json", "{}"))) as Dictionary)
+	player.inventory.merge({1: {"a": 1}, 2: {}, 3: {}, 4: {}, 5: {}})
+	player.available_attributes_points = 3
 
 	var friends_v: Variant = JSON.parse_string(str(row.get("friends_json", "[]")))
 	player.friends = PackedInt64Array(friends_v if friends_v is Array else [])

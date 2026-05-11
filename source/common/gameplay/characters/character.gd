@@ -31,7 +31,7 @@ var pivot: float = 0.0:
 @onready var left_hand_spot: Node2D = $HandOffset/HandPivot/LeftHandSpot
 
 @onready var state_synchronizer: StateSynchronizer = $StateSynchronizer
-@onready var ability_system_component: AbilitySystemComponent = $AbilitySystemComponent
+@onready var stats_component: StatsComponent = $StatsComponent
 @onready var equipment_component: EquipmentComponent = $EquipmentComponent
 @onready var animation_player: AnimationPlayer = $AnimationPlayer
 @onready var animation_tree: AnimationTree = $AnimationTree
@@ -42,15 +42,16 @@ var pivot: float = 0.0:
 func _ready() -> void:
 	if multiplayer.is_server():
 		return
-	ability_system_component.attributes.connect_watcher(Stat.HEALTH,
-		func(value: float) -> void:
-			$ProgressBar.value = value
-	)
-	ability_system_component.attributes.connect_watcher(Stat.HEALTH_MAX,
-		func(value: float) -> void:
-			$ProgressBar.max_value = value
-	)
-	
+	_on_stat_changed(Stat.HEALTH, stats_component.get_stat(Stat.HEALTH))
+	_on_stat_changed(Stat.HEALTH_MAX, stats_component.get_stat(Stat.HEALTH_MAX))
+	stats_component.stats.stat_changed.connect(_on_stat_changed)
+
+
+func _on_stat_changed(stat_name: StringName, value: float) -> void:
+	if stat_name == Stat.HEALTH:
+		$ProgressBar.value = value
+	if stat_name == Stat.HEALTH_MAX:
+		$ProgressBar.max_value = value
 
 
 func update_weapon_animation(state: String) -> void:

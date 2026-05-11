@@ -14,7 +14,8 @@ func data_request_handler(
 		var item: Item = ContentRegistryHub.load_by_id(&"items", item_id)
 		if item:
 			if item is GearItem and item.can_equip(player):
-				player.state_synchronizer.set_by_path(^"EquipmentComponent:mainhand_id", item_id)
+				player.equipment_component.equip_item(item_id)
+				#player.state_synchronizer.set_by_path(^"EquipmentComponent:mainhand_id", item_id)
 			elif item is ConsumableItem:
 				item.on_use(player)
 	return {}

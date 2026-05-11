@@ -6,7 +6,6 @@ const ATTRIBUTE_POINTS_PER_LEVEL: int = 3
 
 const BASE_STATS: Dictionary[StringName, float] = {
 	Stat.HEALTH_MAX: 100.0,
-	Stat.HEALTH: 100.0,
 	Stat.AD: 20.0,
 	Stat.ARMOR: 15.0,
 	Stat.MR: 15.0,

@@ -17,6 +17,7 @@ var selected_item: Item
 
 @onready var item_info: ColorRect = $ItemInfo
 @onready var item_preview_icon: TextureRect = $ItemInfo/PanelContainer/VBoxContainer/ItemPreviewIcon
+@onready var item_amount_label: Label = $ItemInfo/PanelContainer/VBoxContainer/ItemAmountLabel
 @onready var item_description: RichTextLabel = $ItemInfo/PanelContainer/VBoxContainer/ItemDescription
 @onready var item_action_button: Button = $ItemInfo/PanelContainer/VBoxContainer/HBoxContainer/ItemActionButton
 @onready var quick_slots_container: HBoxContainer = $ItemInfo/HotkeyPanel/VBoxContainer/HBoxContainer
@@ -40,7 +41,11 @@ func fill_inventory() -> void:
 		return
 
 	var inventory_data: Dictionary = request_result[0]
-	for item_id: int in inventory_data:
+	
+	# sqlite stringify dictionary so key becomes string instead of int
+	#for item_id: int in inventory_data:
+	for item_id in inventory_data:
+		item_id = int(item_id)
 		var item_data: Dictionary = inventory_data[item_id]
 		if not inventory.has(item_id):
 			add_item(item_id, item_data)
@@ -73,25 +78,31 @@ func add_item(item_id: int, item_data: Dictionary) -> void:
 	var item_icon_size: Vector2i = item.item_icon.get_size()
 
 	var final_size: Vector2i = (available_size - item_icon_size).snapped(item_icon_size)
-	
+
 	new_button.add_theme_constant_override(
 			&"icon_max_width",
 			final_size[final_size.min_axis_index()]
-			)
-	
+	)
+
+	var quantity_label: Label = Label.new()
+	quantity_label.size = Vector2.ZERO
+	quantity_label.text = str(item_data.get("a", 1))
+	quantity_label.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_RIGHT)
+	new_button.add_child(quantity_label)
+
 	new_button.icon = item.item_icon
 	new_button.pressed.connect(
 		_on_item_slot_button_pressed.bind(inventory_slot)
 	)
-	
+
 	inventory_grid.add_child(new_button)
-	
+
 	inventory_slot.button = new_button
 	inventory_slot.item_id = item_id
-	inventory_slot.quantity = item_data.get("qty", 1)
+	inventory_slot.quantity = item_data.get("a", 1)
 	inventory_slot.item_data = item_data
 	inventory_slot.item = item
-	
+
 	inventory[item_id] = inventory_slot
 
 
@@ -101,6 +112,7 @@ func _on_close_button_pressed() -> void:
 
 func _on_item_slot_button_pressed(inventory_slot: InventorySlot) -> void:
 	item_preview_icon.texture = inventory_slot.item.item_icon
+	item_amount_label.text = "x%s" % inventory_slot.quantity
 	item_description.text = inventory_slot.item.description
 	
 	if inventory_slot.item is GearItem:

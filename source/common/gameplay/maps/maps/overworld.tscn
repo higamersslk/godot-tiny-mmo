@@ -41,8 +41,8 @@ metadata/_custom_type_script = "uid://7mbux4mybta0"
 
 [node name="AmbientLight" type="CanvasModulate" parent="." unique_id=477832077]
 script = ExtResource("2_uytus")
-enabled = true
 light_texture = ExtResource("3_mvj6e")
+enabled = true
 metadata/_custom_type_script = "uid://cawbe8qtyfdtk"
 
 [node name="World_tiles" type="Node2D" parent="." unique_id=471749141]
@@ -241,20 +241,11 @@ uv = PackedVector2Array(1118, -312, 1248, -446, 2056, -561, 2530, -138, 2607, 15
 [node name="Polygon2D2" type="Polygon2D" parent="ZonePatch2D" unique_id=1798973058]
 position = Vector2(192, 0)
 color = Color(1, 0.25, 0.25, 0.16)
-polygon = PackedVector2Array(332, 971, 501, 976, 492, 1071, 337, 1076, 330, 1023)
+polygon = PackedVector2Array(320, 960, 512, 960, 512, 1088, 320, 1088, 320, 1024)
 
 [node name="Polygon2D3" type="Polygon2D" parent="ZonePatch2D" unique_id=1550283379]
 color = Color(1, 0.25, 0.25, 0.16)
 polygon = PackedVector2Array(384, 1024, 512, 1024, 512, 1088, 320, 1088, 320, 1024)
-
-[node name="Label" type="Label" parent="." unique_id=1902051743]
-z_index = 10
-z_as_relative = false
-offset_left = 536.0
-offset_top = 968.0
-offset_right = 652.0
-offset_bottom = 989.0
-text = "PVP ZONE TEST"
 
 [node name="Label2" type="Label" parent="." unique_id=1339427002]
 z_index = 10

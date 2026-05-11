@@ -8,9 +8,17 @@ extends Control
 func _ready() -> void:
 	ClientState.local_player_ready.connect(
 		func(local_player: LocalPlayer) -> void:
-			local_player.ability_system_component.attributes.connect_watcher(&"health", _on_health_changed)
-			local_player.ability_system_component.attributes.connect_watcher(Stat.HEALTH_MAX, _on_max_health_changed)
+			local_player.stats_component.stats.stat_changed.connect(_on_stat_changed)
+			_on_stat_changed(Stat.HEALTH, local_player.stats_component.get_stat(Stat.HEALTH))
+			_on_stat_changed(Stat.HEALTH_MAX, local_player.stats_component.get_stat(Stat.HEALTH_MAX))
 	)
+
+
+func _on_stat_changed(stat_name: StringName, value: float) -> void:
+	if stat_name == Stat.HEALTH:
+		_on_health_changed(value)
+	if stat_name == Stat.HEALTH_MAX:
+		_on_max_health_changed(value)
 
 
 func _on_health_changed(new_health: float) -> void:

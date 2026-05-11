@@ -52,17 +52,22 @@ func _notification(what: int) -> void:
 func get_player_resource(id: int) -> PlayerResource:
 	return store.get_player(id)
 
+
 func create_player_character(username: String, character_data: Dictionary) -> int:
 	return store.create_player_character(username, character_data)
+
 
 func get_account_characters(account_name: String) -> Dictionary:
 	return store.get_account_characters(account_name)
 
+
 func get_guild(id: int) -> Guild:
 	return store.get_guild(id)
 
+
 func save_player(p: PlayerResource) -> void:
 	store.save_player(p)
+
 
 func save_guild(g: Guild) -> void:
 	store.save_guild(g)
