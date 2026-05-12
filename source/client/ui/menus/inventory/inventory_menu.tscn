@@ -13,6 +13,7 @@
 [ext_resource type="Resource" uid="uid://qav4p12rsbn3" path="res://source/common/gameplay/items/item_slot/slots/weapon.tres" id="8_as6qe"]
 [ext_resource type="Texture2D" uid="uid://w14y1o4gi3l2" path="res://assets/sprites/items/icons/Icon325.png" id="9_0wccm"]
 [ext_resource type="Resource" uid="uid://wi13k03tseev" path="res://source/common/gameplay/items/item_slot/slots/torso.tres" id="10_xkgtg"]
+[ext_resource type="Resource" uid="uid://dn7q51odqrqp5" path="res://source/common/gameplay/items/item_slot/slots/boot.tres" id="11_nwyl0"]
 [ext_resource type="Script" uid="uid://blh63bbqvk7pv" path="res://source/client/ui/menus/inventory/attributes_panel.gd" id="14_hc0xo"]
 [ext_resource type="Script" uid="uid://dm4es1smo6nxw" path="res://source/client/ui/menus/inventory/stats_panel.gd" id="14_xkgtg"]
 [ext_resource type="Texture2D" uid="uid://dtvatbrsvpnpe" path="res://assets/sprites/items/icons/Icon271.png" id="15_svewr"]
@@ -217,6 +218,7 @@ icon = ExtResource("6_7d8wy")
 icon_alignment = 1
 expand_icon = true
 script = ExtResource("2_0wccm")
+gear_slot = ExtResource("11_nwyl0")
 metadata/_custom_type_script = "uid://cx6ltmvpbwdng"
 
 [node name="HandSlot2" type="Button" parent="MarginContainer/VBoxContainer/MainContainer/CharacterPanel/VBoxContainer2/EquipmentSlots" unique_id=2073795057]

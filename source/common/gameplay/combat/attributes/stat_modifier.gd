@@ -6,6 +6,7 @@ extends Resource
 	Stat.HEALTH_MAX,
 	Stat.MANA_MAX,
 	Stat.ARMOR,
+	Stat.MR,
 	Stat.AD,
 	Stat.MOVE_SPEED
 )
